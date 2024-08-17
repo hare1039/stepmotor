@@ -95,7 +95,7 @@ void setup()
         normal_operation.push_back(move_mode::rotate_left);
         normal_operation.push_back(move_mode::pause);
     }
-	for (int i = 0; i < defined_number_of_cycles; i++)
+    for (int i = 0; i < defined_number_of_cycles; i++)
         normal_operation.push_back(move_mode::rotate_right);
 }
 
