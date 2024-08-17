@@ -1,15 +1,16 @@
 #include <ArduinoSTL.h>
 #include <Stepper.h>
 
-using arduino_time_t = unsigned long int;
+
 constexpr arduino_time_t defined_rotate_duration  = 5000;     // milliseconds; variable
 constexpr arduino_time_t defined_pause_duration   = 1000 * 3; // milliseconds; variable
 constexpr int            defined_number_of_cycles = 40;       // 次; variable
 constexpr int            defined_steps            = 20;       // step per revolution; variable
 constexpr int            defined_stepper_speed    = 500;      // rpm; variable
-constexpr int button_start_port = 8;  // D8; variable => power on --> Run program, power off --> disable
-constexpr int button_right_port = 9;  // D9; variable => power on --> Run conti. right; power off --> unuseful
+constexpr int            button_start_port        = 8;        // D8; variable => power on --> Run program, power off --> disable
+constexpr int            button_right_port        = 9;        // D9; variable => power on --> Run conti. right; power off --> unuseful
 
+using arduino_time_t = unsigned long int;
 auto now() -> arduino_time_t { return millis(); }
 
 enum class move_mode: char
@@ -20,7 +21,7 @@ enum class move_mode: char
 };
 
 std::vector<move_mode> normal_operation;
-std::vector<move_mode> move_right_operation;
+std::vector<move_mode> const move_right_operation {move_mode::rotate_right};
 
 class state
 {
@@ -89,12 +90,13 @@ void setup()
     pinMode(button_start_port, INPUT);
     pinMode(button_right_port, INPUT);
     pinMode(LED_BUILTIN, OUTPUT);
+    for (int i = 0; i < defined_number_of_cycles; i++)
+    {
+        normal_operation.push_back(move_mode::rotate_left);
+        normal_operation.push_back(move_mode::pause);
+    }
 	for (int i = 0; i < defined_number_of_cycles; i++)
-	{
-		normal_operation.push_back(move_mode::rotate_left);
-		normal_operation.push_back(move_mode::pause);
-		move_right_operation.push_back(move_mode::rotate_right);
-	}
+        normal_operation.push_back(move_mode::rotate_right);
 }
 
 void loop()
