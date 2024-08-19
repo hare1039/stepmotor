@@ -21,7 +21,7 @@ enum class move_mode: char
 };
 
 std::vector<move_mode> normal_operation;
-std::vector<move_mode> const move_right_operation {move_mode::rotate_right};
+std::vector<move_mode> move_right_operation;
 
 class state
 {
@@ -41,8 +41,10 @@ public:
     {
         if (states_ != state)
         {
+			// reset the whole state
             states_ = state;
             state_index_ = 0;
+			last_run_ = 0;
         }
     }
 
@@ -52,8 +54,9 @@ public:
             return;
         if (now() - last_run_ >= execution_duration_)  // execution finished
         {
-            state_index_ = (state_index_ + 1) % states_.size(); // no std::size ...
-            switch (states_[state_index_])
+			if (state_index_ >= states_.size())
+				return;
+            switch (states_[state_index_++])
             {
             case move_mode::pause:
                 execution_duration_ = defined_pause_duration;
@@ -96,7 +99,7 @@ void setup()
         normal_operation.push_back(move_mode::pause);
     }
     for (int i = 0; i < defined_number_of_cycles; i++)
-        normal_operation.push_back(move_mode::rotate_right);
+        move_right_operation.push_back(move_mode::rotate_right);
 }
 
 void loop()
