@@ -85,7 +85,7 @@ public:
     }
 };
 
-state moter;
+state motor;
 
 void setup()
 {
@@ -109,9 +109,9 @@ void loop()
     {
         int const right = digitalRead(button_right_port);
         if (right)
-            moter.set_execution_mode(move_right_operation);
+            motor.set_execution_mode(move_right_operation);
         else
-            moter.set_execution_mode(normal_operation);
-        moter.execute();
+            motor.set_execution_mode(normal_operation);
+        motor.execute();
     }
 }
