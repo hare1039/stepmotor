@@ -45,7 +45,7 @@ public:
         {
             // reset the whole state
             states_ = state;
-            state_index_ = 0;
+            state_index_ = -1;
             last_run_ = 0;
         }
     }
@@ -56,9 +56,11 @@ public:
             return;
         if (now() - last_run_ >= execution_duration_)  // execution finished
         {
-            if (state_index_ >= states_.size())
+            int const next_index = state_index_ + 1;
+            if (next_index >= states_.size())
                 return;
-            switch (states_[state_index_++])
+			state_index_ = next_index;
+            switch (states_[state_index_])
             {
             case move_mode::pause:
                 execution_duration_ = defined_pause_duration;
