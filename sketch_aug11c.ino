@@ -43,10 +43,10 @@ public:
     {
         if (states_ != state)
         {
-			// reset the whole state
+            // reset the whole state
             states_ = state;
             state_index_ = 0;
-			last_run_ = 0;
+            last_run_ = 0;
         }
     }
 
@@ -56,8 +56,8 @@ public:
             return;
         if (now() - last_run_ >= execution_duration_)  // execution finished
         {
-			if (state_index_ >= states_.size())
-				return;
+            if (state_index_ >= states_.size())
+                return;
             switch (states_[state_index_++])
             {
             case move_mode::pause:
