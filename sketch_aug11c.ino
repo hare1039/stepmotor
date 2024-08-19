@@ -20,8 +20,10 @@ enum class move_mode: char
     rotate_right,
 };
 
-std::vector<move_mode> normal_operation;
-std::vector<move_mode> move_right_operation;
+using execution_plan = std::vector<move_mode>;
+
+execution_plan normal_plan;
+execution_plan move_right_plan;
 
 class state
 {
@@ -30,14 +32,14 @@ class state
     arduino_time_t last_run_ = now();
     arduino_time_t execution_duration_ = 0;
     int state_index_ = 0;
-    std::vector<move_mode> states_;
+    execution_plan states_;
 
 public:
     state(): stepper_{steps_, 2, 4, 3, 5} {
         stepper_.setSpeed(defined_stepper_speed); // rpm
     }
 
-    void set_execution_mode(std::vector<move_mode> const & state)
+    void set_execution_plan(execution_plan const & state)
     {
         if (states_ != state)
         {
@@ -95,11 +97,11 @@ void setup()
     pinMode(LED_BUILTIN, OUTPUT);
     for (int i = 0; i < defined_number_of_cycles; i++)
     {
-        normal_operation.push_back(move_mode::rotate_left);
-        normal_operation.push_back(move_mode::pause);
+        normal_plan.push_back(move_mode::rotate_left);
+        normal_plan.push_back(move_mode::pause);
     }
     for (int i = 0; i < defined_number_of_cycles; i++)
-        move_right_operation.push_back(move_mode::rotate_right);
+        move_right_plan.push_back(move_mode::rotate_right);
 }
 
 void loop()
@@ -109,9 +111,9 @@ void loop()
     {
         int const right = digitalRead(button_right_port);
         if (right)
-            motor.set_execution_mode(move_right_operation);
+            motor.set_execution_plan(move_right_plan);
         else
-            motor.set_execution_mode(normal_operation);
+            motor.set_execution_plan(normal_plan);
         motor.execute();
     }
 }
